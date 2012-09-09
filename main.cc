@@ -100,7 +100,7 @@ Type typeList[] = {
 
 std::string ConvertType(const std::string& type)
 {
-    for(int i = 0; i < sizeof(typeList) / sizeof(Type); ++i)
+    for(size_t i = 0; i < sizeof(typeList) / sizeof(Type); ++i)
     {
         if(std::string(typeList[i].type) == type)
             return typeList[i].nativeType;
@@ -111,7 +111,7 @@ std::string ConvertType(const std::string& type)
 
 int GetTypeStorageSize(const std::string& type)
 {
-    for(int i = 0; i < sizeof(typeList) / sizeof(Type); ++i)
+    for(size_t i = 0; i < sizeof(typeList) / sizeof(Type); ++i)
     {
         if(std::string(typeList[i].type) == type)
             return typeList[i].typeSize + typeList[i].storageOverhead;
@@ -122,7 +122,7 @@ int GetTypeStorageSize(const std::string& type)
 
 int GetTypeSize(const std::string& type)
 {
-    for(int i = 0; i < sizeof(typeList) / sizeof(Type); ++i)
+    for(size_t i = 0; i < sizeof(typeList) / sizeof(Type); ++i)
     {
         if(std::string(typeList[i].type) == type)
             return typeList[i].typeSize;
@@ -282,7 +282,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
     f << "{" << std::endl;
     f << "    public:" << std::endl;
     f << "        enum MESSAGE_TYPE {";
-    for(int i = 0; i < messageList.size(); ++i)
+    for(size_t i = 0; i < messageList.size(); ++i)
     {
         const Message& msg = messageList[i];
         f << "MT_" << msg.name;
@@ -381,14 +381,14 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
 
 
 
-    for(int i = 0; i < messageList.size(); ++i)
+    for(size_t i = 0; i < messageList.size(); ++i)
     {
         const Message& msg = messageList[i];
         f << "class " << msg.name << " : public " << options.baseclass << std::endl;
         f << "{" << std::endl;
 
         f << "    public:" << std::endl;
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             f << "        " << member.nativeType << " " << member.name;
@@ -399,7 +399,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
         f << "        " << msg.name << "() {}" << std::endl;
         std::string ctorParams;
         std::string ctorInitializer;
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             if(member.count == 1)
@@ -417,7 +417,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
         }
         f << "        " << msg.name << "(" << ctorParams << ") : " << ctorInitializer << std::endl;
         f << "        {" << std::endl;
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             if(member.count > 1)
@@ -446,7 +446,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
         //f << "             uint32_t type = GetType();" << std::endl;
         f << "             *((uint32_t*)" << MangleInternalKeyword("p") << ") = SwapByte4((uint32_t)GetType());" << std::endl;
         f << "             " << MangleInternalKeyword("p") << " += 4;" << std::endl;
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             f << "             // " << member.name << std::endl;
@@ -498,7 +498,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
         //---------------------------------------------------------------------
         f << "        virtual void InternalCreateFromBuffer(const char* " << MangleInternalKeyword("p") << ")" << std::endl;
         f << "        {" << std::endl;
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             f << "             // " << member.name << std::endl;
@@ -539,13 +539,13 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
         f << "        virtual uint32_t InternalCalculateNeededSerializationSize() const" << std::endl;
         f << "        {" << std::endl;
         int size = 8; // version(4  bytes) and message type (4 bytes)
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             size += GetTypeStorageSize(member.type) * member.count;
         }
         f << "             int " << MangleInternalKeyword("size") << " = " << size << ";" << std::endl;
-        for(int j = 0; j < msg.memberList.size(); ++j)
+        for(size_t j = 0; j < msg.memberList.size(); ++j)
         {
             const DataMember& member = msg.memberList[j];
             if(member.type == "str")
@@ -598,7 +598,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
     f << "             " << options.baseclass << "* message = 0;" << std::endl;
     f << "             switch(type)" << std::endl;
     f << "             {" << std::endl;
-    for(int i = 0; i < messageList.size(); ++i)
+    for(size_t i = 0; i < messageList.size(); ++i)
     {
         const Message& msg = messageList[i];
         f << "                 case " << options.baseclass << "::MT_" << msg.name << ":" <<  std::endl;
