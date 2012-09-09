@@ -17,4 +17,8 @@ Portable
 NOTE: If you have more advanced needs, you might want to look at better (but more complex) alternatives such as google protobuf or ASN.1
 
 Compilation:
-g++ *.cc -o msgbuf
+$ g++ *.cc -o msgbuf
+
+Usage:
+(assuming your message definition is in test.mb)
+$ msgbuf test.mb test.h
