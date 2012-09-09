@@ -6,13 +6,17 @@ msgbuf tries to implement some features (in fact a very limited subset) supporte
 
 ## Characteristics:
 * Simple language definition
-* Output a single standard .h file, without requiring you to link with other libs
-* Very simple to use
+* Output a **single** standard .h file, without requiring you to link with other libs
+* Very **simple** to use
 * Uses inheritance (all Messages inherit from a base class)
 * Space efficient serialization
 * Simple versionning
 * Automatically and transparently handle big/little endian conversion
 * Portable
+
+msgbuf **doesn't** support (at least) the following features:
+* Strong versionning
+* Optional fields
 
 **NOTE**: If you have more advanced needs, you might want to look at better (but more complex) alternatives such as [google protobuf] or [ASN.1]
 
