@@ -1,9 +1,8 @@
-msgbuf
 Message buffer in C++
 
 Given an input file containing message declaration, this simple tool generate the code that allows to easily serialize/unserialize data.
 
-msgbuf tries to simplement some features (in fact a very limited subset) supported by tools like google protobuf or ASN.1
+msgbuf tries to implement some features (in fact a very limited subset) supported by tools like google protobuf or ASN.1
 
 Characteristics:
 Simple language definition
