@@ -1,1 +1,21 @@
 msgbuf
+Message buffer in C++
+
+Given an input file containing message declaration, this simple tool generate the code that allows to easily serialize/unserialize data.
+
+msgbuf tries to simplement some features (in fact a very limited subset) supported by tools like google protobuf or ASN.1
+
+Characteristics:
+Simple language definition
+Output a single standard .h file, without requiring you to link with other libs
+Very simple to use
+Uses inheritance (all Messages inherit from a base class)
+Space efficient serialization
+Simple versionning
+Automatically and transparently handle big/little endian conversion
+Portable
+
+NOTE: If you have more advanced needs, you might want to look at better (but more complex) alternatives such as google protobuf or ASN.1
+
+Compilation:
+g++ *.cc -o msgbuf
