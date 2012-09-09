@@ -340,20 +340,6 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
     f << "                 return (((uint64_t)SwapByte4((uint32_t)(v & 0xffffffffull))) << 32) | (SwapByte4((uint32_t)(v >> 32)));" << std::endl;
     f << "             return v;" << std::endl;
     f << "        }" << std::endl;
-    //f << "        static float SwapByte4f(float f)" << std::endl;
-    //f << "        {" << std::endl;
-    //f << "             uint32_t v = *((uint32_t*)&f);" << std::endl;
-    //f << "             if(ShouldSwap())" << std::endl;
-    //f << "                 return SwapByte4(v);" << std::endl;
-    //f << "             return *((float*)&v);" << std::endl;
-    //f << "        }" << std::endl;
-    //f << "        static double SwapByte8f(double f)" << std::endl;
-    //f << "        {" << std::endl;
-    //f << "             uint64_t v = *((uint64_t*)&f);" << std::endl;
-    //f << "             if(ShouldSwap())" << std::endl;
-    //f << "                 return SwapByte8(v);" << std::endl;
-    //f << "             return *((double*)&v);" << std::endl;
-    //f << "        }" << std::endl;
     f << "        static void SwapBytes(uint8_t& v1, uint8_t& v2)" << std::endl;
     f << "        {" << std::endl;
     f << "            uint8_t tmp = v1;" << std::endl;
@@ -448,7 +434,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
         //---------------------------------------------------------------------
         f << "        virtual uint32_t InternalSerializeToBuffer(char* " << MangleInternalKeyword("p") << ", uint32_t " << MangleInternalKeyword("len") << ") const" << std::endl;
         f << "        {" << std::endl;
-        f << "             int " << MangleInternalKeyword("storageSize") << " = InternalCalculateNeededSerializationSize();" << std::endl;
+        f << "             uint32_t " << MangleInternalKeyword("storageSize") << " = InternalCalculateNeededSerializationSize();" << std::endl;
         f << "             if(" << MangleInternalKeyword("len") << " < " << MangleInternalKeyword("storageSize") << ")" << std::endl;
         f << "                 return 0;" << std::endl;
         // Version and message type
