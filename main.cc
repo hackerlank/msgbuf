@@ -23,7 +23,7 @@ std::string Trim(const std::string& str)
     return str.substr(pos1, pos2 - pos1 + 1);
 }
 
-template <class T>
+    template <class T>
 T ToNumber(const std::string& str)
 {
     std::istringstream ss(str);
@@ -129,6 +129,15 @@ int GetTypeSize(const std::string& type)
     }
 
     return 0;
+}
+
+std::string GetSwapByteSuffix(const std::string& type)
+{
+    std::string swapByteSuffix = ToString(GetTypeSize(type));
+    if(type == "float" || type == "double")
+        swapByteSuffix += "f";
+
+    return swapByteSuffix;
 }
 
 bool ProcessInputFile(const std::string& filename, MessageList& messageList, Options& options)
@@ -328,8 +337,52 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
     f << "        static uint64_t SwapByte8(uint64_t v)" << std::endl;
     f << "        {" << std::endl;
     f << "             if(ShouldSwap())" << std::endl;
-    f << "                 return (((uint64_t)SwapByte4(v & 0xffffffffull)) << 32) | (SwapByte4( v >> 32));" << std::endl;
+    f << "                 return (((uint64_t)SwapByte4((uint32_t)(v & 0xffffffffull))) << 32) | (SwapByte4((uint32_t)(v >> 32)));" << std::endl;
     f << "             return v;" << std::endl;
+    f << "        }" << std::endl;
+    //f << "        static float SwapByte4f(float f)" << std::endl;
+    //f << "        {" << std::endl;
+    //f << "             uint32_t v = *((uint32_t*)&f);" << std::endl;
+    //f << "             if(ShouldSwap())" << std::endl;
+    //f << "                 return SwapByte4(v);" << std::endl;
+    //f << "             return *((float*)&v);" << std::endl;
+    //f << "        }" << std::endl;
+    //f << "        static double SwapByte8f(double f)" << std::endl;
+    //f << "        {" << std::endl;
+    //f << "             uint64_t v = *((uint64_t*)&f);" << std::endl;
+    //f << "             if(ShouldSwap())" << std::endl;
+    //f << "                 return SwapByte8(v);" << std::endl;
+    //f << "             return *((double*)&v);" << std::endl;
+    //f << "        }" << std::endl;
+    f << "        static void SwapBytes(uint8_t& v1, uint8_t& v2)" << std::endl;
+    f << "        {" << std::endl;
+    f << "            uint8_t tmp = v1;" << std::endl;
+    f << "            v1 = v2;" << std::endl;
+    f << "            v2 = tmp;" << std::endl;
+    f << "        }" << std::endl;
+    f << "        static float SwapByte4f(float v)" << std::endl;
+    f << "        {" << std::endl;
+    f << "             union { float f; uint8_t c[4]; };" << std::endl;
+    f << "             f = v;" << std::endl;
+    f << "             if(ShouldSwap())" << std::endl;
+    f << "             {" << std::endl;
+    f << "                 SwapBytes(c[0], c[3]);" << std::endl;
+    f << "                 SwapBytes(c[1], c[2]);" << std::endl;
+    f << "             }" << std::endl;
+    f << "             return f;" << std::endl;
+    f << "        }" << std::endl;
+    f << "        static double SwapByte8f(double v)" << std::endl;
+    f << "        {" << std::endl;
+    f << "             union { double f; uint8_t c[8]; };" << std::endl;
+    f << "             f = v;" << std::endl;
+    f << "             if(ShouldSwap())" << std::endl;
+    f << "             {" << std::endl;
+    f << "                 SwapBytes(c[0], c[7]);" << std::endl;
+    f << "                 SwapBytes(c[1], c[6]);" << std::endl;
+    f << "                 SwapBytes(c[2], c[5]);" << std::endl;
+    f << "                 SwapBytes(c[3], c[4]);" << std::endl;
+    f << "             }" << std::endl;
+    f << "             return f;" << std::endl;
     f << "        }" << std::endl;
     f << "    friend class " << options.baseclass << "Factory;" << std::endl;
     f << "};" << std::endl;
@@ -427,7 +480,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
                 f << "             *" << MangleInternalKeyword("p") << " = *((char*)&" << member.name << (member.count > 1 ? "[" + MangleInternalKeyword("i") + "]" : "") << ");" << std::endl;
             else
             {
-                f << "            *((" << member.nativeType << "*)" << MangleInternalKeyword("p") << ") = (" << member.nativeType << ")SwapByte" << GetTypeSize(member.type) << "(" << member.name << (member.count > 1 ? "[" + MangleInternalKeyword("i") + "]" : "") << ");" << std::endl;
+                f << "            *((" << member.nativeType << "*)" << MangleInternalKeyword("p") << ") = (" << member.nativeType << ")SwapByte" << GetSwapByteSuffix(member.type) << "(" << member.name << (member.count > 1 ? "[" + MangleInternalKeyword("i") + "]" : "") << ");" << std::endl;
             }
             if(j != msg.memberList.size() - 1)
             {
@@ -485,7 +538,7 @@ bool WriteOutput(const std::string& output, const MessageList& messageList, cons
             }
             else
             {
-                f << "             " << member.name << (member.count > 1 ? "[" + MangleInternalKeyword("i") + "]" : "") << " = (" << member.nativeType << ")SwapByte" << GetTypeSize(member.type) << "(*(" << member.nativeType << "*)" << MangleInternalKeyword("p") << ");" << std::endl;
+                f << "             " << member.name << (member.count > 1 ? "[" + MangleInternalKeyword("i") + "]" : "") << " = (" << member.nativeType << ")SwapByte" << GetSwapByteSuffix(member.type) << "(*(" << member.nativeType << "*)" << MangleInternalKeyword("p") << ");" << std::endl;
                 if(j != msg.memberList.size() - 1)
                     f << "             " << MangleInternalKeyword("p") << " += " << GetTypeStorageSize(member.type) << ";" << std::endl;
             }
