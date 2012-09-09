@@ -21,7 +21,9 @@ msgbuf **doesn't** support (at least) the following features:
 **NOTE**: If you have more advanced needs, you might want to look at better (but more complex) alternatives such as [google protobuf] or [ASN.1]
 
 ## Compilation:
-    $ g++ *.cc -o msgbuf
+    $ ./build_gcc.sh    # build on linux/cygwin (static)
+or
+    $ ./build_mingw.sh  # cross-compile windows exe from linux (static)
 
 ## Usage:
 (assuming your message definition is in test.mb)
