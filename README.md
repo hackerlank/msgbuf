@@ -28,5 +28,13 @@ msgbuf **doesn't** support (at least) the following features:
 
     $ msgbuf test.mb test.h
 
+## TODO
+* Support message-in-message (?)
+* Support variable size array (?)
+* Create testsuite/samples
+* Better console output about what's happening
+* Provide build script
+* Test on other platform (at least gcc, mingw and visual studio)
+
   [google protobuf]: http://code.google.com/p/protobuf/
   [ASN.1]: http://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One
