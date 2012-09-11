@@ -31,6 +31,7 @@ or
     $ msgbuf test.mb test.h
 
 ## TODO
+* Enums
 * Support message-in-message (?)
 * Support variable size array (?)
 * Create testsuite/samples
